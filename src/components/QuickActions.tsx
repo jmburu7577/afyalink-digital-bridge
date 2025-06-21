@@ -2,53 +2,70 @@
 import React from 'react';
 import { Video, Phone, Calendar, FileText, Pill, Activity } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
+import { useNavigate } from 'react-router-dom';
 
 const QuickActions = () => {
+  const navigate = useNavigate();
+
   const actions = [
     {
       icon: Video,
       label: 'Video Consult',
       color: 'bg-blue-100 text-blue-600',
-      description: 'Start now'
+      description: 'Start now',
+      path: '/video-consult'
     },
     {
       icon: Phone,
       label: 'Voice Call',
       color: 'bg-green-100 text-green-600',
-      description: 'Quick call'
+      description: 'Quick call',
+      path: '/voice-call'
     },
     {
       icon: Calendar,
       label: 'Schedule',
       color: 'bg-purple-100 text-purple-600',
-      description: 'Book later'
+      description: 'Book later',
+      path: '/schedule'
     },
     {
       icon: FileText,
       label: 'Records',
       color: 'bg-orange-100 text-orange-600',
-      description: 'View history'
+      description: 'View history',
+      path: '/records'
     },
     {
       icon: Pill,
       label: 'Pharmacy',
       color: 'bg-pink-100 text-pink-600',
-      description: 'Order meds'
+      description: 'Order meds',
+      path: '/pharmacy'
     },
     {
       icon: Activity,
       label: 'Health Check',
       color: 'bg-red-100 text-red-600',
-      description: 'Monitor'
+      description: 'Monitor',
+      path: '/health-check'
     }
   ];
+
+  const handleActionClick = (path: string) => {
+    navigate(path);
+  };
 
   return (
     <section className="space-y-4">
       <h3 className="text-xl font-semibold text-gray-900">Quick Actions</h3>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         {actions.map((action, index) => (
-          <Card key={index} className="hover:shadow-md transition-all duration-300 cursor-pointer group">
+          <Card 
+            key={index} 
+            className="hover:shadow-lg transition-all duration-300 cursor-pointer group hover:scale-105" 
+            onClick={() => handleActionClick(action.path)}
+          >
             <CardContent className="p-4 text-center">
               <div className={`w-12 h-12 ${action.color} rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300`}>
                 <action.icon className="h-6 w-6" />
