@@ -80,7 +80,7 @@ const DoctorPortal = () => {
                 <CardContent className="p-6 text-center">
                   <Calendar className="h-8 w-8 text-blue-600 mx-auto mb-2" />
                   <p className="text-2xl font-bold">12</p>
-                  <p className="text-sm text-gray-600">Today's Appointments</p>
+                  <p className="text-sm text-gray-600">Today&apos;s Appointments</p>
                 </CardContent>
               </Card>
               <Card>
@@ -101,7 +101,7 @@ const DoctorPortal = () => {
                 <CardContent className="p-6 text-center">
                   <DollarSign className="h-8 w-8 text-yellow-600 mx-auto mb-2" />
                   <p className="text-2xl font-bold">KSh 15,400</p>
-                  <p className="text-sm text-gray-600">This Month's Earnings</p>
+                  <p className="text-sm text-gray-600">This Month&apos;s Earnings</p>
                 </CardContent>
               </Card>
             </div>
@@ -109,7 +109,7 @@ const DoctorPortal = () => {
             {/* Today's Schedule */}
             <Card>
               <CardHeader>
-                <CardTitle>Today's Schedule</CardTitle>
+                <CardTitle>Today&apos;s Schedule</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
@@ -342,7 +342,7 @@ const DoctorPortal = () => {
                     </div>
                     <div className="flex justify-between">
                       <span>Response Time</span>
-                      <span className="font-semibold">< 2 minutes</span>
+                      <span className="font-semibold">&lt; 2 minutes</span>
                     </div>
                   </div>
                 </CardContent>
