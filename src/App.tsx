@@ -11,6 +11,9 @@ import Schedule from "./pages/Schedule";
 import Records from "./pages/Records";
 import Pharmacy from "./pages/Pharmacy";
 import HealthCheck from "./pages/HealthCheck";
+import AdminDashboard from "./pages/AdminDashboard";
+import PatientPortal from "./pages/PatientPortal";
+import DoctorPortal from "./pages/DoctorPortal";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -29,6 +32,9 @@ const App = () => (
           <Route path="/records" element={<Records />} />
           <Route path="/pharmacy" element={<Pharmacy />} />
           <Route path="/health-check" element={<HealthCheck />} />
+          <Route path="/admin-dashboard" element={<AdminDashboard />} />
+          <Route path="/patient-portal" element={<PatientPortal />} />
+          <Route path="/doctor-portal" element={<DoctorPortal />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
