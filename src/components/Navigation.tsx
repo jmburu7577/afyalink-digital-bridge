@@ -3,7 +3,7 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
-import { Heart, Calendar, FileText, MessageCircle, Phone, Video, Users, LogOut } from 'lucide-react';
+import { Heart, Calendar, FileText, MessageCircle, Phone, Video, Users, LogOut, UserPlus, Shield } from 'lucide-react';
 
 const Navigation = () => {
   const { user, userProfile, signOut } = useAuth();
@@ -12,6 +12,7 @@ const Navigation = () => {
   if (!user) return null;
 
   const isDoctor = userProfile?.role === 'doctor';
+  const isAdmin = userProfile?.role === 'admin';
   const isActive = (path: string) => location.pathname === path;
 
   return (
@@ -71,14 +72,36 @@ const Navigation = () => {
                   Doctor Portal
                 </Link>
               ) : (
+                <>
+                  <Link 
+                    to="/patient-portal" 
+                    className={`px-3 py-2 rounded-md text-sm font-medium ${
+                      isActive('/patient-portal') ? 'bg-blue-100 text-blue-700' : 'text-gray-600 hover:text-gray-900'
+                    }`}
+                  >
+                    <Users className="h-4 w-4 inline mr-1" />
+                    Patient Portal
+                  </Link>
+                  <Link 
+                    to="/doctor-registration" 
+                    className={`px-3 py-2 rounded-md text-sm font-medium ${
+                      isActive('/doctor-registration') ? 'bg-blue-100 text-blue-700' : 'text-gray-600 hover:text-gray-900'
+                    }`}
+                  >
+                    <UserPlus className="h-4 w-4 inline mr-1" />
+                    Become Doctor
+                  </Link>
+                </>
+              )}
+              {isAdmin && (
                 <Link 
-                  to="/patient-portal" 
+                  to="/admin-dashboard" 
                   className={`px-3 py-2 rounded-md text-sm font-medium ${
-                    isActive('/patient-portal') ? 'bg-blue-100 text-blue-700' : 'text-gray-600 hover:text-gray-900'
+                    isActive('/admin-dashboard') ? 'bg-blue-100 text-blue-700' : 'text-gray-600 hover:text-gray-900'
                   }`}
                 >
-                  <Users className="h-4 w-4 inline mr-1" />
-                  Patient Portal
+                  <Shield className="h-4 w-4 inline mr-1" />
+                  Admin
                 </Link>
               )}
             </div>
@@ -87,6 +110,11 @@ const Navigation = () => {
           <div className="flex items-center space-x-4">
             <span className="text-sm text-gray-600">
               Welcome, {userProfile?.full_name || user.email}
+              {userProfile?.role && (
+                <span className="ml-1 text-xs bg-gray-100 px-2 py-1 rounded-full">
+                  {userProfile.role}
+                </span>
+              )}
             </span>
             <Button variant="outline" size="sm" onClick={signOut}>
               <LogOut className="h-4 w-4 mr-1" />

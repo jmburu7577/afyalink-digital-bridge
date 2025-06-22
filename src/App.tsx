@@ -18,6 +18,8 @@ import HealthCheck from "./pages/HealthCheck";
 import AdminDashboard from "./pages/AdminDashboard";
 import PatientPortal from "./pages/PatientPortal";
 import DoctorPortal from "./pages/DoctorPortal";
+import DoctorRegistrationPage from "./pages/DoctorRegistrationPage";
+import ConsultationRoom from "./pages/ConsultationRoom";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -81,6 +83,16 @@ const App = () => (
               <Route path="/doctor-portal" element={
                 <ProtectedRoute>
                   <DoctorPortal />
+                </ProtectedRoute>
+              } />
+              <Route path="/doctor-registration" element={
+                <ProtectedRoute>
+                  <DoctorRegistrationPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/consultation/:appointmentId" element={
+                <ProtectedRoute>
+                  <ConsultationRoom />
                 </ProtectedRoute>
               } />
               <Route path="*" element={<NotFound />} />
