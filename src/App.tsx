@@ -4,7 +4,11 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "@/contexts/AuthContext";
+import ProtectedRoute from "@/components/ProtectedRoute";
+import Navigation from "@/components/Navigation";
 import Index from "./pages/Index";
+import Auth from "./pages/Auth";
 import VideoConsult from "./pages/VideoConsult";
 import VoiceCall from "./pages/VoiceCall";
 import Schedule from "./pages/Schedule";
@@ -20,26 +24,71 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/video-consult" element={<VideoConsult />} />
-          <Route path="/voice-call" element={<VoiceCall />} />
-          <Route path="/schedule" element={<Schedule />} />
-          <Route path="/records" element={<Records />} />
-          <Route path="/pharmacy" element={<Pharmacy />} />
-          <Route path="/health-check" element={<HealthCheck />} />
-          <Route path="/admin-dashboard" element={<AdminDashboard />} />
-          <Route path="/patient-portal" element={<PatientPortal />} />
-          <Route path="/doctor-portal" element={<DoctorPortal />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
+    <AuthProvider>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <div className="min-h-screen bg-gray-50">
+            <Navigation />
+            <Routes>
+              <Route path="/auth" element={<Auth />} />
+              <Route path="/" element={
+                <ProtectedRoute>
+                  <Index />
+                </ProtectedRoute>
+              } />
+              <Route path="/video-consult" element={
+                <ProtectedRoute>
+                  <VideoConsult />
+                </ProtectedRoute>
+              } />
+              <Route path="/voice-call" element={
+                <ProtectedRoute>
+                  <VoiceCall />
+                </ProtectedRoute>
+              } />
+              <Route path="/schedule" element={
+                <ProtectedRoute>
+                  <Schedule />
+                </ProtectedRoute>
+              } />
+              <Route path="/records" element={
+                <ProtectedRoute>
+                  <Records />
+                </ProtectedRoute>
+              } />
+              <Route path="/pharmacy" element={
+                <ProtectedRoute>
+                  <Pharmacy />
+                </ProtectedRoute>
+              } />
+              <Route path="/health-check" element={
+                <ProtectedRoute>
+                  <HealthCheck />
+                </ProtectedRoute>
+              } />
+              <Route path="/admin-dashboard" element={
+                <ProtectedRoute>
+                  <AdminDashboard />
+                </ProtectedRoute>
+              } />
+              <Route path="/patient-portal" element={
+                <ProtectedRoute>
+                  <PatientPortal />
+                </ProtectedRoute>
+              } />
+              <Route path="/doctor-portal" element={
+                <ProtectedRoute>
+                  <DoctorPortal />
+                </ProtectedRoute>
+              } />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </div>
+        </BrowserRouter>
+      </TooltipProvider>
+    </AuthProvider>
   </QueryClientProvider>
 );
 

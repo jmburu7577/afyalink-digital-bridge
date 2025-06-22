@@ -1,167 +1,176 @@
 
 import React from 'react';
-import { Stethoscope, Phone, Calendar, FileText, User, Bell, Search } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
+import { useDoctors } from '@/hooks/useDoctors';
+import { useAppointments } from '@/hooks/useAppointments';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import DoctorCard from '@/components/DoctorCard';
-import QuickActions from '@/components/QuickActions';
-import HealthStats from '@/components/HealthStats';
+import { Button } from '@/components/ui/button';
+import { Heart, Video, Phone, MessageCircle, Calendar, FileText, Users, Clock } from 'lucide-react';
 
 const Index = () => {
+  const { userProfile } = useAuth();
+  const { doctors } = useDoctors();
+  const { appointments } = useAppointments();
+
+  const isDoctor = userProfile?.role === 'doctor';
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-green-600 rounded-full flex items-center justify-center">
-                <Stethoscope className="h-6 w-6 text-white" />
-              </div>
-              <div>
-                <h1 className="text-xl font-bold text-gray-900">AfyaLink</h1>
-                <p className="text-sm text-gray-600">Your Health, Connected</p>
-              </div>
-            </div>
-            <div className="flex items-center space-x-3">
-              <Button variant="ghost" size="icon">
-                <Bell className="h-5 w-5 text-gray-600" />
-              </Button>
-              <Button variant="ghost" size="icon">
-                <User className="h-5 w-5 text-gray-600" />
-              </Button>
-            </div>
+      {/* Hero Section */}
+      <div className="container mx-auto px-4 py-12">
+        <div className="text-center space-y-6">
+          <div className="w-20 h-20 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto">
+            <Heart className="h-10 w-10" />
           </div>
-        </div>
-      </header>
-
-      {/* Main Content */}
-      <main className="container mx-auto px-4 py-6 space-y-8">
-        {/* Welcome Section */}
-        <div className="text-center space-y-4">
-          <h2 className="text-3xl font-bold text-gray-900">
-            Connect with Healthcare Professionals
-          </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Get instant access to certified doctors and healthcare services. 
-            Your health is just a tap away.
+          <h1 className="text-4xl md:text-6xl font-bold text-gray-900">
+            Welcome to <span className="text-blue-600">AfyaLink</span>
+          </h1>
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            Your comprehensive healthcare platform connecting patients with qualified doctors through video calls, voice consultations, and secure messaging.
           </p>
+          
+          {userProfile && (
+            <div className="bg-blue-100 text-blue-800 px-4 py-2 rounded-lg inline-block">
+              Welcome back, {userProfile.full_name}! 
+              {isDoctor ? ' (Doctor Portal)' : ' (Patient Portal)'}
+            </div>
+          )}
         </div>
 
-        {/* Search Bar */}
-        <div className="max-w-md mx-auto">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-            <Input 
-              placeholder="Search doctors, specialties..." 
-              className="pl-10 h-12 rounded-full border-2 border-blue-100 focus:border-blue-300"
-            />
-          </div>
+        {/* Quick Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+          <Card>
+            <CardContent className="p-6 text-center">
+              <Users className="h-8 w-8 text-blue-600 mx-auto mb-2" />
+              <p className="text-2xl font-bold">{doctors.length}</p>
+              <p className="text-sm text-gray-600">Available Doctors</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-6 text-center">
+              <Calendar className="h-8 w-8 text-green-600 mx-auto mb-2" />
+              <p className="text-2xl font-bold">{appointments.length}</p>
+              <p className="text-sm text-gray-600">Your Appointments</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-6 text-center">
+              <Clock className="h-8 w-8 text-purple-600 mx-auto mb-2" />
+              <p className="text-2xl font-bold">24/7</p>
+              <p className="text-sm text-gray-600">Support Available</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Consultation Options */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+          <Card className="hover:shadow-lg transition-shadow">
+            <CardHeader>
+              <Video className="h-12 w-12 text-blue-600 mb-4" />
+              <CardTitle>Video Consultation</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-gray-600 mb-4">Face-to-face consultation with doctors via high-quality video calls.</p>
+              <p className="text-lg font-bold text-blue-600 mb-4">KSh 500</p>
+              <Button asChild className="w-full">
+                <Link to="/video-consult">Start Video Call</Link>
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card className="hover:shadow-lg transition-shadow">
+            <CardHeader>
+              <Phone className="h-12 w-12 text-green-600 mb-4" />
+              <CardTitle>Voice Call</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-gray-600 mb-4">Quick audio consultation for immediate medical advice.</p>
+              <p className="text-lg font-bold text-green-600 mb-4">KSh 300</p>
+              <Button asChild variant="outline" className="w-full">
+                <Link to="/voice-call">Start Voice Call</Link>
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card className="hover:shadow-lg transition-shadow">
+            <CardHeader>
+              <MessageCircle className="h-12 w-12 text-purple-600 mb-4" />
+              <CardTitle>Chat Consultation</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-gray-600 mb-4">Text-based consultation for non-urgent medical questions.</p>
+              <p className="text-lg font-bold text-purple-600 mb-4">KSh 200</p>
+              <Button asChild variant="outline" className="w-full">
+                <Link to="/schedule">Start Chat</Link>
+              </Button>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Quick Actions */}
-        <QuickActions />
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12">
+          <Button asChild size="lg" className="h-20 flex flex-col">
+            <Link to="/schedule">
+              <Calendar className="h-6 w-6 mb-1" />
+              <span className="text-sm">Schedule</span>
+            </Link>
+          </Button>
+          <Button asChild variant="outline" size="lg" className="h-20 flex flex-col">
+            <Link to="/records">
+              <FileText className="h-6 w-6 mb-1" />
+              <span className="text-sm">Records</span>
+            </Link>
+          </Button>
+          <Button asChild variant="outline" size="lg" className="h-20 flex flex-col">
+            <Link to={isDoctor ? "/doctor-portal" : "/patient-portal"}>
+              <Users className="h-6 w-6 mb-1" />
+              <span className="text-sm">Portal</span>
+            </Link>
+          </Button>
+          <Button asChild variant="outline" size="lg" className="h-20 flex flex-col">
+            <Link to="/health-check">
+              <Heart className="h-6 w-6 mb-1" />
+              <span className="text-sm">Health Check</span>
+            </Link>
+          </Button>
+        </div>
 
-        {/* Health Stats */}
-        <HealthStats />
-
-        {/* Available Doctors */}
-        <section className="space-y-6">
-          <div className="flex items-center justify-between">
-            <h3 className="text-2xl font-bold text-gray-900">Available Doctors</h3>
-            <Badge variant="secondary" className="bg-green-100 text-green-800">
-              12 Online Now
-            </Badge>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <DoctorCard 
-              name="Dr. Sarah Mwangi"
-              specialty="General Practitioner"
-              rating={4.9}
-              experience="8 years"
-              price="KSh 500"
-              image="/placeholder.svg"
-              isOnline={true}
-              nextAvailable="Available now"
-            />
-            <DoctorCard 
-              name="Dr. James Kiprop"
-              specialty="Pediatrician"
-              rating={4.8}
-              experience="12 years"
-              price="KSh 700"
-              image="/placeholder.svg"
-              isOnline={true}
-              nextAvailable="Available now"
-            />
-            <DoctorCard 
-              name="Dr. Grace Wanjiku"
-              specialty="Dermatologist"
-              rating={4.7}
-              experience="6 years"
-              price="KSh 800"
-              image="/placeholder.svg"
-              isOnline={false}
-              nextAvailable="Available at 2:00 PM"
-            />
-          </div>
-        </section>
-
-        {/* Recent Consultations */}
-        <section className="space-y-6">
-          <h3 className="text-2xl font-bold text-gray-900">Recent Consultations</h3>
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                    <FileText className="h-6 w-6 text-blue-600" />
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-gray-900">General Checkup</h4>
-                    <p className="text-sm text-gray-600">Dr. Sarah Mwangi • June 15, 2025</p>
-                  </div>
-                </div>
-                <Badge variant="outline">Completed</Badge>
+        {/* Features */}
+        <div className="mt-16">
+          <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">Why Choose AfyaLink?</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Video className="h-8 w-8" />
               </div>
-            </CardContent>
-          </Card>
-        </section>
-      </main>
-
-      {/* Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-around py-2">
-            <Button variant="ghost" className="flex flex-col items-center space-y-1 py-2">
-              <Stethoscope className="h-5 w-5 text-blue-600" />
-              <span className="text-xs text-blue-600">Home</span>
-            </Button>
-            <Button variant="ghost" className="flex flex-col items-center space-y-1 py-2">
-              <Calendar className="h-5 w-5 text-gray-400" />
-              <span className="text-xs text-gray-400">Appointments</span>
-            </Button>
-            <Button variant="ghost" className="flex flex-col items-center space-y-1 py-2">
-              <Phone className="h-5 w-5 text-gray-400" />
-              <span className="text-xs text-gray-400">Consult</span>
-            </Button>
-            <Button variant="ghost" className="flex flex-col items-center space-y-1 py-2">
-              <FileText className="h-5 w-5 text-gray-400" />
-              <span className="text-xs text-gray-400">Records</span>
-            </Button>
-            <Button variant="ghost" className="flex flex-col items-center space-y-1 py-2">
-              <User className="h-5 w-5 text-gray-400" />
-              <span className="text-xs text-gray-400">Profile</span>
-            </Button>
+              <h3 className="font-semibold mb-2">HD Video Calls</h3>
+              <p className="text-sm text-gray-600">Crystal clear video consultations with licensed doctors</p>
+            </div>
+            <div className="text-center">
+              <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Clock className="h-8 w-8" />
+              </div>
+              <h3 className="font-semibold mb-2">24/7 Availability</h3>
+              <p className="text-sm text-gray-600">Round-the-clock medical support when you need it</p>
+            </div>
+            <div className="text-center">
+              <div className="w-16 h-16 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <FileText className="h-8 w-8" />
+              </div>
+              <h3 className="font-semibold mb-2">Digital Records</h3>
+              <p className="text-sm text-gray-600">Secure storage and easy access to your medical history</p>
+            </div>
+            <div className="text-center">
+              <div className="w-16 h-16 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Users className="h-8 w-8" />
+              </div>
+              <h3 className="font-semibold mb-2">Qualified Doctors</h3>
+              <p className="text-sm text-gray-600">Licensed and verified healthcare professionals</p>
+            </div>
           </div>
         </div>
-      </nav>
-
-      {/* Add bottom padding to account for fixed navigation */}
-      <div className="h-20"></div>
+      </div>
     </div>
   );
 };

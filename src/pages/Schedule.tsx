@@ -1,125 +1,154 @@
 
-import React, { useState } from 'react';
-import { Calendar, Clock, User, ChevronLeft, ChevronRight } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import React from 'react';
+import { useAppointments } from '@/hooks/useAppointments';
+import { useDoctors } from '@/hooks/useDoctors';
+import AppointmentBooking from '@/components/AppointmentBooking';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Calendar, Clock, Video, Phone, MessageCircle, User } from 'lucide-react';
+import { format } from 'date-fns';
 
 const Schedule = () => {
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [selectedTime, setSelectedTime] = useState('');
+  const { appointments, loading } = useAppointments();
+  const { doctors } = useDoctors();
 
-  const timeSlots = [
-    '09:00 AM', '09:30 AM', '10:00 AM', '10:30 AM',
-    '11:00 AM', '11:30 AM', '02:00 PM', '02:30 PM',
-    '03:00 PM', '03:30 PM', '04:00 PM', '04:30 PM'
-  ];
+  const getConsultationIcon = (type: string) => {
+    switch (type) {
+      case 'video': return <Video className="h-4 w-4" />;
+      case 'audio': return <Phone className="h-4 w-4" />;
+      case 'chat': return <MessageCircle className="h-4 w-4" />;
+      default: return <Calendar className="h-4 w-4" />;
+    }
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'scheduled': return 'bg-blue-100 text-blue-800';
+      case 'ongoing': return 'bg-green-100 text-green-800';
+      case 'completed': return 'bg-gray-100 text-gray-800';
+      case 'cancelled': return 'bg-red-100 text-red-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 p-4">
+        <div className="container mx-auto max-w-6xl">
+          <div className="text-center">Loading appointments...</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50 p-4">
-      <div className="container mx-auto max-w-4xl space-y-6">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 p-4">
+      <div className="container mx-auto max-w-6xl space-y-6">
         {/* Header */}
         <div className="text-center space-y-4">
-          <div className="w-16 h-16 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mx-auto">
+          <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto">
             <Calendar className="h-8 w-8" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900">Schedule Appointment</h1>
-          <p className="text-lg text-gray-600">Book your consultation at a convenient time</p>
+          <h1 className="text-3xl font-bold text-gray-900">Schedule & Appointments</h1>
+          <p className="text-lg text-gray-600">Manage your healthcare appointments</p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Calendar */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Select Date</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-7 gap-2 text-center">
-                {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-                  <div key={day} className="font-medium text-gray-600 p-2">{day}</div>
-                ))}
-                {Array.from({ length: 30 }, (_, i) => (
-                  <button
-                    key={i}
-                    className={`p-2 rounded-lg hover:bg-purple-100 ${
-                      i === 15 ? 'bg-purple-600 text-white' : 'text-gray-700'
-                    }`}
-                  >
-                    {i + 1}
-                  </button>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Time Slots */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Available Times</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 gap-2">
-                {timeSlots.map(time => (
-                  <button
-                    key={time}
-                    onClick={() => setSelectedTime(time)}
-                    className={`p-3 rounded-lg border text-sm font-medium transition-colors ${
-                      selectedTime === time
-                        ? 'bg-purple-600 text-white border-purple-600'
-                        : 'hover:bg-purple-50 border-gray-200'
-                    }`}
-                  >
-                    {time}
-                  </button>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+        {/* Quick Actions */}
+        <div className="flex justify-center space-x-4">
+          <AppointmentBooking />
         </div>
 
-        {/* Doctor Selection */}
+        {/* Available Doctors */}
         <Card>
           <CardHeader>
-            <CardTitle>Choose Doctor</CardTitle>
+            <CardTitle>Available Doctors</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            {[1, 2, 3].map((_, index) => (
-              <div key={index} className="flex items-center space-x-4 p-4 border rounded-lg hover:bg-gray-50">
-                <div className="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center">
-                  <User className="h-6 w-6 text-white" />
-                </div>
-                <div className="flex-1">
-                  <h3 className="font-semibold">Dr. Grace Wanjiku</h3>
-                  <p className="text-sm text-gray-600">Dermatologist</p>
-                  <div className="flex items-center space-x-2 mt-1">
-                    <Clock className="h-4 w-4 text-purple-600" />
-                    <span className="text-sm text-purple-600">Next available: Today 2:00 PM</span>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <p className="font-semibold">KSh 800</p>
-                  <Button size="sm" className="mt-2">Book</Button>
-                </div>
-              </div>
-            ))}
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {doctors.map((doctor: any) => (
+                <Card key={doctor.id} className="hover:shadow-md transition-shadow">
+                  <CardContent className="p-4">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                        <User className="h-6 w-6 text-blue-600" />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="font-semibold">{doctor.user.full_name}</h3>
+                        <p className="text-sm text-gray-600">{doctor.specialty}</p>
+                        <p className="text-sm font-medium text-green-600">
+                          KSh {doctor.consultation_fee}/consultation
+                        </p>
+                      </div>
+                    </div>
+                    {doctor.is_available && (
+                      <Badge className="mt-2 bg-green-100 text-green-800">Available</Badge>
+                    )}
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </CardContent>
         </Card>
 
-        {/* Booking Summary */}
-        {selectedTime && (
-          <Card className="border-2 border-purple-200 bg-purple-50">
-            <CardContent className="p-6">
-              <h3 className="font-semibold mb-4">Booking Summary</h3>
-              <div className="space-y-2 text-sm">
-                <p><span className="font-medium">Date:</span> June 21, 2025</p>
-                <p><span className="font-medium">Time:</span> {selectedTime}</p>
-                <p><span className="font-medium">Type:</span> Video Consultation</p>
-                <p><span className="font-medium">Fee:</span> KSh 500</p>
+        {/* Your Appointments */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Your Appointments</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {appointments.length === 0 ? (
+              <div className="text-center py-8 text-gray-500">
+                No appointments scheduled. Book your first appointment above!
               </div>
-              <Button className="w-full mt-4">Confirm Booking</Button>
-            </CardContent>
-          </Card>
-        )}
+            ) : (
+              <div className="space-y-4">
+                {appointments.map((appointment: any) => (
+                  <Card key={appointment.id} className="hover:shadow-md transition-shadow">
+                    <CardContent className="p-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-4">
+                          <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                            {getConsultationIcon(appointment.consultation_type)}
+                          </div>
+                          <div>
+                            <h3 className="font-semibold">
+                              {appointment.doctor?.user?.full_name || 'Doctor'}
+                            </h3>
+                            <p className="text-sm text-gray-600">
+                              {appointment.doctor?.specialty || 'General Practice'}
+                            </p>
+                            <div className="flex items-center space-x-2 mt-1">
+                              <Calendar className="h-4 w-4 text-gray-400" />
+                              <span className="text-sm text-gray-500">
+                                {appointment.appointment_date}
+                              </span>
+                              <Clock className="h-4 w-4 text-gray-400 ml-2" />
+                              <span className="text-sm text-gray-500">
+                                {appointment.appointment_time}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex items-center space-x-3">
+                          <Badge className={getStatusColor(appointment.status)}>
+                            {appointment.status}
+                          </Badge>
+                          <div className="text-right">
+                            <p className="font-medium">KSh {appointment.amount}</p>
+                            <p className="text-sm text-gray-500 capitalize">
+                              {appointment.consultation_type}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
