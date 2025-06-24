@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -5,7 +6,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { FileText, Save, FileTemplate } from 'lucide-react';
+import { FileText, Save, FileType } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useHealthRecords } from '@/hooks/useHealthRecords';
 import ClinicalNoteTemplates from './ClinicalNoteTemplates';
@@ -152,7 +153,7 @@ Date: ${new Date().toLocaleDateString()}
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="note">Clinical Note</TabsTrigger>
             <TabsTrigger value="templates">
-              <FileTemplate className="h-4 w-4 mr-2" />
+              <FileType className="h-4 w-4 mr-2" />
               Templates
             </TabsTrigger>
           </TabsList>
