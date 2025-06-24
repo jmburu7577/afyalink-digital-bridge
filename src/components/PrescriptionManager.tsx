@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -376,12 +377,13 @@ Status: Active
                     onClick={() => sendToPharmacy(prescription)}
                   >
                     <Send className="h-4 w-4 mr-2" />
-                  Send to Pharmacy
-                </Button>
+                    Send to Pharmacy
+                  </Button>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        </CardContent>
       </Card>
     </div>
   );
