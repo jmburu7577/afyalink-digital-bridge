@@ -1,9 +1,8 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Card, CardContent } from '@/components/ui/card';
-import { ChevronLeft, ChevronRight, X, Play } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X, Play, Calendar, Video, FileText, CreditCard, Pill, MessageCircle } from 'lucide-react';
 
 interface OnboardingStep {
   title: string;

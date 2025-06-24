@@ -37,6 +37,10 @@ const DoctorPortal = () => {
   const totalPatients = doctorAppointments.length;
   const healthRecords = doctorAppointments.filter(apt => apt.health_record);
 
+  // Define selected patient and appointment IDs for the enhanced components
+  const selectedPatientId = todayAppointments[0]?.patient_id;
+  const selectedAppointmentId = todayAppointments[0]?.id;
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
       <OnboardingTutorial userRole="doctor" />
