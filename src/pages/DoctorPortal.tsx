@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 // Import the new consultation tool components
 import WriteNotesDialog from '@/components/WriteNotesDialog';
-import EPrescriptionDialog from '@/components/EPrescriptionDialog';
+import PrescriptionManager from '@/components/PrescriptionManager';
 import FollowUpDialog from '@/components/FollowUpDialog';
 import VideoConsultationDialog from '@/components/VideoConsultationDialog';
 import { useAppointments } from '@/hooks/useAppointments';
@@ -213,7 +213,7 @@ const DoctorPortal = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                    <EPrescriptionDialog patientId={todayAppointments[0]?.patient_id} appointmentId={todayAppointments[0]?.id}/>
+                    <PrescriptionManager patientId={todayAppointments[0]?.patient_id} appointmentId={todayAppointments[0]?.id}/>
                     <WriteNotesDialog patientId={todayAppointments[0]?.patient_id} appointmentId={todayAppointments[0]?.id}/>
                     <FollowUpDialog patientId={todayAppointments[0]?.patient_id} doctorId={userProfile?.id}/>
                     <VideoConsultationDialog appointments={doctorAppointments} />
@@ -230,11 +230,12 @@ const DoctorPortal = () => {
                 <CardContent>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <WriteNotesDialog patientId={todayAppointments[0]?.patient_id} appointmentId={todayAppointments[0]?.id}/>
-                    <EPrescriptionDialog patientId={todayAppointments[0]?.patient_id} appointmentId={todayAppointments[0]?.id}/>
                     <FollowUpDialog patientId={todayAppointments[0]?.patient_id} doctorId={userProfile?.id}/>
                   </div>
                 </CardContent>
               </Card>
+
+              <PrescriptionManager patientId={todayAppointments[0]?.patient_id} appointmentId={todayAppointments[0]?.id}/>
 
               <Card className="bg-white/10 backdrop-blur-lg border-white/20 shadow-xl">
                 <CardHeader>
@@ -336,32 +337,9 @@ const DoctorPortal = () => {
             <TabsContent value="prescriptions" className="space-y-6 mt-8">
               <div className="flex justify-between items-center">
                 <h2 className="text-2xl font-semibold text-white">E-Prescriptions</h2>
-                <Button className="bg-gradient-to-r from-blue-500 to-teal-600 hover:from-blue-600 hover:to-teal-700 text-white shadow-lg">
-                  Create New Prescription
-                </Button>
               </div>
 
-              <Card className="bg-white/10 backdrop-blur-lg border-white/20 shadow-xl">
-                <CardContent className="p-6">
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between p-4 bg-white/10 backdrop-blur border border-white/20 rounded-lg">
-                      <div>
-                        <h3 className="font-semibold text-white">John Doe - Hypertension Medication</h3>
-                        <p className="text-sm text-blue-200">Amlodipine 5mg, once daily for 30 days</p>
-                        <p className="text-sm text-blue-300">Created: 2024-01-15</p>
-                      </div>
-                      <div className="flex space-x-2">
-                        <Button variant="outline" size="sm" className="bg-white/20 text-white border-white/30 hover:bg-white/30">
-                          Edit
-                        </Button>
-                        <Button size="sm" className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-lg">
-                          Send to Pharmacy
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+              <PrescriptionManager patientId={todayAppointments[0]?.patient_id} appointmentId={todayAppointments[0]?.id}/>
             </TabsContent>
 
             <TabsContent value="reports" className="space-y-6 mt-8">

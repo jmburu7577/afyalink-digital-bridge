@@ -7,7 +7,7 @@ import { useToast } from '@/hooks/use-toast';
 export const useHealthRecords = () => {
   const [records, setRecords] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { user } = useAuth();
+  const { user, userProfile } = useAuth();
   const { toast } = useToast();
 
   const fetchRecords = async () => {
@@ -27,8 +27,10 @@ export const useHealthRecords = () => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
+      console.log('Fetched health records:', data);
       setRecords(data || []);
     } catch (error: any) {
+      console.error('Error fetching health records:', error);
       toast({
         title: "Error loading health records",
         description: error.message,
@@ -41,22 +43,30 @@ export const useHealthRecords = () => {
 
   const createRecord = async (recordData: any) => {
     try {
+      console.log('Creating health record with data:', recordData);
+      
       const { data, error } = await supabase
         .from('health_records')
         .insert([recordData])
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error creating health record:', error);
+        throw error;
+      }
+      
+      console.log('Created health record:', data);
       
       toast({
         title: "Health record created!",
         description: "The health record has been created successfully."
       });
       
-      fetchRecords();
+      await fetchRecords();
       return { data, error: null };
     } catch (error: any) {
+      console.error('Error in createRecord:', error);
       toast({
         title: "Error creating health record",
         description: error.message,
@@ -68,6 +78,8 @@ export const useHealthRecords = () => {
 
   const updateRecord = async (id: string, updates: any) => {
     try {
+      console.log('Updating health record:', id, updates);
+      
       const { data, error } = await supabase
         .from('health_records')
         .update(updates)
@@ -75,16 +87,22 @@ export const useHealthRecords = () => {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error updating health record:', error);
+        throw error;
+      }
+      
+      console.log('Updated health record:', data);
       
       toast({
         title: "Record updated",
         description: "The health record has been updated successfully."
       });
       
-      fetchRecords();
+      await fetchRecords();
       return { data, error: null };
     } catch (error: any) {
+      console.error('Error in updateRecord:', error);
       toast({
         title: "Error updating record",
         description: error.message,

@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { FileText, Save } from 'lucide-react';
 import { useHealthRecords } from '@/hooks/useHealthRecords';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface WriteNotesDialogProps {
   patientId?: string;
@@ -23,6 +24,7 @@ const WriteNotesDialog: React.FC<WriteNotesDialogProps> = ({ patientId, appointm
 
   const { createRecord } = useHealthRecords();
   const { toast } = useToast();
+  const { userProfile } = useAuth();
 
   const handleSaveNote = async () => {
     if (!title || !content) {
@@ -34,21 +36,44 @@ const WriteNotesDialog: React.FC<WriteNotesDialogProps> = ({ patientId, appointm
       return;
     }
 
-    const { error } = await createRecord({
-      patient_id: selectedPatient,
+    // Use patientId if provided, otherwise use selectedPatient
+    const finalPatientId = patientId || selectedPatient;
+    
+    if (!finalPatientId) {
+      toast({
+        title: "Missing Patient",
+        description: "Please select a patient for this note.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    console.log('Saving note with data:', {
+      patient_id: finalPatientId,
       appointment_id: appointmentId,
       record_type: recordType,
       title,
-      content
+      content,
+      doctor_id: userProfile?.id
+    });
+
+    const { error } = await createRecord({
+      patient_id: finalPatientId,
+      appointment_id: appointmentId,
+      record_type: recordType,
+      title,
+      content,
+      doctor_id: userProfile?.id
     });
 
     if (!error) {
       setIsOpen(false);
       setTitle('');
       setContent('');
+      setRecordType('visit_note');
       toast({
         title: "Note Saved",
-        description: "Your note has been saved successfully."
+        description: "Your clinical note has been saved successfully."
       });
     }
   };
@@ -77,16 +102,28 @@ const WriteNotesDialog: React.FC<WriteNotesDialogProps> = ({ patientId, appointm
                 <SelectItem value="diagnosis">Diagnosis</SelectItem>
                 <SelectItem value="treatment_plan">Treatment Plan</SelectItem>
                 <SelectItem value="progress_note">Progress Note</SelectItem>
+                <SelectItem value="consultation_note">Consultation Note</SelectItem>
               </SelectContent>
             </Select>
           </div>
+
+          {!patientId && (
+            <div>
+              <label className="text-sm font-medium mb-2 block">Patient ID</label>
+              <Input
+                value={selectedPatient}
+                onChange={(e) => setSelectedPatient(e.target.value)}
+                placeholder="Enter patient ID or select from appointments"
+              />
+            </div>
+          )}
 
           <div>
             <label className="text-sm font-medium mb-2 block">Title</label>
             <Input
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="Enter note title"
+              placeholder="Enter note title (e.g., 'Follow-up consultation', 'Initial assessment')"
             />
           </div>
 
@@ -95,7 +132,7 @@ const WriteNotesDialog: React.FC<WriteNotesDialogProps> = ({ patientId, appointm
             <Textarea
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              placeholder="Enter your clinical observations, diagnosis, treatment plan..."
+              placeholder="Enter your clinical observations, diagnosis, treatment plan, patient response, recommendations..."
               rows={8}
               className="min-h-[200px]"
             />
