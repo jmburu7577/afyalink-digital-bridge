@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Calendar, FileText, MessageCircle, Download, Clock, CreditCard, Phone, Video, User, Heart } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -6,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
+import OnboardingTutorial from '@/components/OnboardingTutorial';
 
 const PatientPortal = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -29,6 +29,8 @@ const PatientPortal = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <OnboardingTutorial userRole="patient" />
+      
       {/* Header */}
       <div className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -56,60 +58,80 @@ const PatientPortal = () => {
           </TabsList>
 
           <TabsContent value="dashboard" className="space-y-6">
-            {/* Quick Stats */}
+            {/* Enhanced Quick Stats with better visuals */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-              <Card>
+              <Card className="hover:shadow-lg transition-shadow">
                 <CardContent className="p-6 text-center">
-                  <Calendar className="h-8 w-8 text-blue-600 mx-auto mb-2" />
-                  <p className="text-2xl font-bold">2</p>
+                  <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <Calendar className="h-6 w-6 text-blue-600" />
+                  </div>
+                  <p className="text-2xl font-bold text-blue-600">2</p>
                   <p className="text-sm text-gray-600">Upcoming Appointments</p>
                 </CardContent>
               </Card>
-              <Card>
+              <Card className="hover:shadow-lg transition-shadow">
                 <CardContent className="p-6 text-center">
-                  <FileText className="h-8 w-8 text-green-600 mx-auto mb-2" />
-                  <p className="text-2xl font-bold">8</p>
+                  <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <FileText className="h-6 w-6 text-green-600" />
+                  </div>
+                  <p className="text-2xl font-bold text-green-600">8</p>
                   <p className="text-sm text-gray-600">Health Records</p>
                 </CardContent>
               </Card>
-              <Card>
+              <Card className="hover:shadow-lg transition-shadow">
                 <CardContent className="p-6 text-center">
-                  <MessageCircle className="h-8 w-8 text-purple-600 mx-auto mb-2" />
-                  <p className="text-2xl font-bold">3</p>
+                  <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <MessageCircle className="h-6 w-6 text-purple-600" />
+                  </div>
+                  <p className="text-2xl font-bold text-purple-600">3</p>
                   <p className="text-sm text-gray-600">Unread Messages</p>
                 </CardContent>
               </Card>
-              <Card>
+              <Card className="hover:shadow-lg transition-shadow">
                 <CardContent className="p-6 text-center">
-                  <Heart className="h-8 w-8 text-red-600 mx-auto mb-2" />
-                  <p className="text-2xl font-bold">Good</p>
+                  <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <Heart className="h-6 w-6 text-red-600" />
+                  </div>
+                  <p className="text-2xl font-bold text-red-600">Good</p>
                   <p className="text-sm text-gray-600">Health Status</p>
                 </CardContent>
               </Card>
             </div>
 
-            {/* Upcoming Appointments */}
-            <Card>
+            {/* Enhanced Upcoming Appointments */}
+            <Card className="hover:shadow-lg transition-shadow">
               <CardHeader>
-                <CardTitle>Upcoming Appointments</CardTitle>
+                <CardTitle className="flex items-center justify-between">
+                  Upcoming Appointments
+                  <Button size="sm" variant="outline">View All</Button>
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   {upcomingAppointments.map((appointment) => (
-                    <div key={appointment.id} className="flex items-center justify-between p-4 border rounded-lg">
+                    <div key={appointment.id} className="group flex items-center justify-between p-4 border rounded-lg hover:shadow-md transition-all">
                       <div className="flex items-center space-x-4">
-                        <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                          {appointment.type === 'Video' ? <Video className="h-6 w-6 text-blue-600" /> : <Phone className="h-6 w-6 text-green-600" />}
+                        <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
+                          appointment.type === 'Video' ? 'bg-blue-100' : 'bg-green-100'
+                        }`}>
+                          {appointment.type === 'Video' ? 
+                            <Video className="h-6 w-6 text-blue-600" /> : 
+                            <Phone className="h-6 w-6 text-green-600" />
+                          }
                         </div>
                         <div>
-                          <h3 className="font-semibold">{appointment.doctor}</h3>
+                          <h3 className="font-semibold group-hover:text-blue-600 transition-colors">{appointment.doctor}</h3>
                           <p className="text-sm text-gray-600">{appointment.specialty}</p>
                           <p className="text-sm text-gray-500">{appointment.date} at {appointment.time}</p>
                         </div>
                       </div>
                       <div className="flex space-x-2">
-                        <Button variant="outline" size="sm">Reschedule</Button>
-                        <Button size="sm">Join</Button>
+                        <Button variant="outline" size="sm" className="opacity-0 group-hover:opacity-100 transition-opacity">
+                          Reschedule
+                        </Button>
+                        <Button size="sm" className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700">
+                          Join
+                        </Button>
                       </div>
                     </div>
                   ))}
@@ -117,28 +139,28 @@ const PatientPortal = () => {
               </CardContent>
             </Card>
 
-            {/* Quick Actions */}
-            <Card>
+            {/* Enhanced Quick Actions with better layout */}
+            <Card className="hover:shadow-lg transition-shadow">
               <CardHeader>
                 <CardTitle>Quick Actions</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <Button className="h-16 flex flex-col">
-                    <Video className="h-6 w-6 mb-1" />
-                    <span className="text-xs">Book Video Call</span>
+                  <Button className="h-20 flex flex-col bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 transform hover:scale-105 transition-all">
+                    <Video className="h-8 w-8 mb-2" />
+                    <span className="text-sm font-medium">Video Call</span>
                   </Button>
-                  <Button variant="outline" className="h-16 flex flex-col">
-                    <Phone className="h-6 w-6 mb-1" />
-                    <span className="text-xs">Audio Consult</span>
+                  <Button variant="outline" className="h-20 flex flex-col hover:shadow-md transform hover:scale-105 transition-all">
+                    <Phone className="h-8 w-8 mb-2" />
+                    <span className="text-sm font-medium">Audio Consult</span>
                   </Button>
-                  <Button variant="outline" className="h-16 flex flex-col">
-                    <MessageCircle className="h-6 w-6 mb-1" />
-                    <span className="text-xs">Chat Doctor</span>
+                  <Button variant="outline" className="h-20 flex flex-col hover:shadow-md transform hover:scale-105 transition-all">
+                    <MessageCircle className="h-8 w-8 mb-2" />
+                    <span className="text-sm font-medium">Chat Doctor</span>
                   </Button>
-                  <Button variant="outline" className="h-16 flex flex-col">
-                    <FileText className="h-6 w-6 mb-1" />
-                    <span className="text-xs">View Records</span>
+                  <Button variant="outline" className="h-20 flex flex-col hover:shadow-md transform hover:scale-105 transition-all">
+                    <FileText className="h-8 w-8 mb-2" />
+                    <span className="text-sm font-medium">View Records</span>
                   </Button>
                 </div>
               </CardContent>
